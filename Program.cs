@@ -9,7 +9,7 @@ namespace Lab3
     {
         static void Main(string[] args)
         {
-            List<int> intList = GenerateRandomIntList(10000, 5000);
+            List<int> intList = GenerateNearlySortedIntList(10_000_000, 500_000);
 
             double totalTime = 0.0;
             double averageTime = 0.0;
@@ -21,9 +21,10 @@ namespace Lab3
             //Console.WriteLine("[{0}]", string.Join(", ", doubleList.ToArray()));
 
 
-            BubbleSort<int> bubbleSort = new BubbleSort<int>();
-            Console.WriteLine("BUBBLE SORT");
+            // Quadratic Time Complexity
 
+            /*BubbleSort<int> bubbleSort = new BubbleSort<int>();
+            Console.WriteLine("BUBBLE SORT");
             totalTime = 0;
 
             for (int i = 0; i < 11; i++)
@@ -34,11 +35,10 @@ namespace Lab3
             }
 
             averageTime = totalTime / 11;
-            Console.WriteLine($"{averageTime}");
+            Console.WriteLine($"Average: {averageTime}");*/
 
 
-
-            InsertionSort<int> insertionSort = new InsertionSort<int>();
+            /*InsertionSort<int> insertionSort = new InsertionSort<int>();
             Console.WriteLine("INSERTION SORT");
             totalTime = 0;
 
@@ -50,9 +50,42 @@ namespace Lab3
             }
 
             averageTime = totalTime / 11;
-            Console.WriteLine($"{averageTime}");
+            Console.WriteLine($"Average: {averageTime}");*/
 
 
+            // Log-Linear Time Complexity
+
+            MergeSort<int> mergeSort = new MergeSort<int>();
+            Console.WriteLine("MERGE SORT");
+            totalTime = 0;
+
+            for (int i = 0; i < 11; i++)
+            {
+                List<int> intListCopy = new List<int>(intList);   // make a copy of the original unsorted array
+
+                totalTime += TimeSort<int>(mergeSort, intListCopy);
+            }
+
+            averageTime = totalTime / 11;
+            Console.WriteLine($"Average: {averageTime}");
+
+
+            QuickSort<int> quickSort = new QuickSort<int>();
+            Console.WriteLine("QUICK SORT");
+            totalTime = 0;
+
+            for (int i = 0; i < 11; i++)
+            {
+                List<int> intListCopy = new List<int>(intList);   // make a copy of the original unsorted array
+
+                totalTime += TimeSort<int>(quickSort, intListCopy);
+            }
+
+            averageTime = totalTime / 11;
+            Console.WriteLine($"Average: {averageTime}");
+
+
+            //  Linear Time Complexity
 
             BucketSort bucketSort = new BucketSort();
             Console.WriteLine("BUCKET SORT");
@@ -66,7 +99,22 @@ namespace Lab3
             }
 
             averageTime = totalTime / 11;
-            Console.WriteLine($"{averageTime}");
+            Console.WriteLine($"Average: {averageTime}");
+
+
+            RadixSort radixSort = new RadixSort();
+            Console.WriteLine("RADIX SORT");
+            totalTime = 0;
+
+            for (int i = 0; i < 11; i++)
+            {
+                List<int> intListCopy = new List<int>(intList);   // make a copy of the original unsorted array
+
+                totalTime += TimeSort(radixSort, intListCopy);
+            }
+
+            averageTime = totalTime / 11;
+            Console.WriteLine($"Average: {averageTime}");
 
 
             //Console.WriteLine("[{0}]", string.Join(", ", intList.ToArray()));
@@ -195,7 +243,7 @@ namespace Lab3
             return list;
         }
 
-        public static List<double> GenerateRandomDoubleList(int length, double maxValue)
+        /*public static List<double> GenerateRandomDoubleList(int length, double maxValue)
         {
             List<double> list = new List<double>();
 
@@ -206,6 +254,31 @@ namespace Lab3
                 list.Add(random.NextDouble()* maxValue);
             }
 
+            return list;
+        }*/
+
+        public static List<int> GenerateReverseIntList(int length, int maxValue)
+        {
+            List<int> list = GenerateRandomIntList(length, maxValue);
+            list.Sort();
+            list.Reverse();
+            return list;
+        }
+
+        public static List<int> GenerateNearlySortedIntList(int length, int maxValue)
+        {
+            Random random = new Random();
+            List<int> list = GenerateRandomIntList(length, maxValue);
+            list.Sort();
+            for (int i = 0; i < (length * 0.025); i++)
+            {
+                var rand1 = random.Next(0, length);
+                var rand2 = random.Next(0, length);
+
+                var temp = rand1;
+                list[rand1] = list[rand2];
+                list[rand2] = list[temp];
+            }
             return list;
         }
     }
